@@ -1,15 +1,14 @@
-const { Product } = require('../models/product');
+const { Product } = require('../models/db');
 const { Op } = require('sequelize');
+const DEFAULT_PAGE_NUMBER = 1;
+const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_SORT_FIELD = 'id';
+const DEFAULT_SORT_ORDER = 'ASC';
+const DEFAULT_IN_STOCK_AVAILABLE = false;
 
-// GET ALL PRODUCTS WITH PAGINATION, SORTING AND FILTERING
+// GET ALL PRODUCTS WITH PAGINATION, SORTING AND FILTERING INCLUDING IN STOCK AVAILABLE PRODUCTS
 exports.getAllProducts = async (req, res) => {
     try {
-        const DEFAULT_PAGE_NUMBER = 1;
-        const DEFAULT_PAGE_SIZE = 10;
-        const DEFAULT_SORT_FIELD = 'id';
-        const DEFAULT_SORT_ORDER = 'ASC';
-        const DEFAULT_IN_STOCK_AVAILABLE = false;
-
         let {
             pageNumber = DEFAULT_PAGE_NUMBER,
             pageSize = DEFAULT_PAGE_SIZE,
@@ -65,47 +64,6 @@ exports.getProductById = async (req, res) => {
             });
         }
         res.status(200).json(product);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal Server error'
-        });
-    }
-};
-
-// CREATE PRODUCT BY ID
-exports.createProduct = async (req, res) => {
-    try {
-        const product = await Product.create(req.body);
-        res.status(201).json({
-            status: 'success',
-            message: `Product created with id ${product.id}`
-        });
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal Server error'
-        });
-    }
-};
-
-// DELETE PRODUCT BY ID
-exports.deleteProductById = async (req, res) => {
-    try {
-        const product = await Product.findByPk(req.params.id);
-        if (!product) {
-            return res.status(404).json({
-                status: 'error',
-                message: 'Product not found'
-            });
-        }
-        await product.destroy();
-        res.status(200).json({
-            status: 'success',
-            message: `Product deleted with id ${product.id}`
-        });
     } catch (error) {
         console.log(error);
         res.status(500).json({

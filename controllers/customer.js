@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
-const { Customer } = require('../models/customer');
-const { createToken, verifyToken } = require('../middlewares/auth');
+const { Customer } = require('../models/db');
+const { createToken } = require('../middlewares/auth');
 const COOKIE_SECRET = process.env.COOKIE_SECRET || 'cookie_secret';
 
 // CUSTOMER REGISTRATION

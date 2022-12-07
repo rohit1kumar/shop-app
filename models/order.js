@@ -1,4 +1,4 @@
-const { DataTypes, sequelize } = require('../db')
+const { DataTypes, sequelize } = require('../db');
 
 const Order = sequelize.define('order', {
     id: {
@@ -7,14 +7,6 @@ const Order = sequelize.define('order', {
         primaryKey: true,
         allowNull: false
     },
-    // customerId: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: false
-    // },
-    // productId: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: false
-    // },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: false
