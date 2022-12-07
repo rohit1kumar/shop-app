@@ -6,7 +6,7 @@ const { registerValidation, loginValidation, validate } = require('../middleware
 router.post('/register', registerValidation(), validate, register);
 
 // CUSTOMER LOGIN
-router.post('/login', loginValidation, validate, login);
+router.post('/login', loginValidation(), validate, login);
 
 // CUSTOMER LOGOUT
 router.get('/logout', logout);

@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_SORT_FIELD = 'id';
-const DEFAULT_SORT_ORDER = 'asc'; 
+const DEFAULT_SORT_ORDER = 'asc';
 const DEFAULT_IN_STOCK_AVAILABLE = false;
 
 // GET ALL PRODUCTS WITH PAGINATION, SORTING AND FILTERING INCLUDING IN STOCK AVAILABLE PRODUCTS
@@ -28,7 +28,7 @@ exports.getAllProducts = async (req, res) => {
             pageSize = DEFAULT_PAGE_SIZE;
         }
 
-        if (!['ASC', 'DESC'].includes(sortOrder)) {
+        if (!['asc', 'desc'].includes(sortOrder)) {
             sortOrder = DEFAULT_SORT_ORDER;
         }
 
