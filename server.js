@@ -10,22 +10,22 @@ const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 // const swaggerDocument = YAML.load('./swagger.yaml');
 
-// const { errorMiddleware } = require('./middleware/Error');
 const { sequelize } = require('./db');
-// const { notFound } = require('./utils/notFound');
+const { notFound, error } = require('./middlewares/error');
 
 // router
 const customerRouter = require('./routes/customer');
 const productRouter = require('./routes/product');
 const orderRouter = require('./routes/order');
 
-// security middleware
-// app.use(cors());
-// app.use(helmet());
+// Security Middleware
+app.use(cors());
+app.use(helmet());
 // app.use(rateLimit({
-//     windowMs: 10 * 60 * 1000, // 10 minutes
-//     max: 20 // limit each IP to 20 requests per windowMs
+//     windowMs: 30 * 60 * 1000, // 30 minutes
+//     max: 4 // limit each IP to 4 requests per windowMs
 // }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -38,9 +38,9 @@ app.use('/api/v1/', customerRouter);
 app.use('/api/v1/', productRouter);
 app.use('/api/v1/', orderRouter);
 
-// loading error handler middleware
-// app.use(notFound);
-// app.use(errorMiddleware);
+// Error Handling Middleware
+app.use(error); // 500
+app.use(notFound); // 404
 
 const port = process.env.PORT || 3000;
 // const data = require('./product.json');

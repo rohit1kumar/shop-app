@@ -1,9 +1,8 @@
 const router = require('express').Router();
-const { getAllProducts, getProductById, createProduct, deleteProductById } = require('../controllers/product');
-const { validateToken } = require('../middlewares/auth');
+const { getAllProducts, getProductById, } = require('../controllers/product');
 
 // GET ALL PRODUCTS
-router.get('/product', getAllProducts);
+router.get('/products', getAllProducts);
 
 // GET PRODUCT BY ID
 router.get('/product/:id', getProductById);
