@@ -141,7 +141,13 @@ exports.getAllOrders = async (req, res) => {
 // GET ORDER BY ID (logged in user only)
 exports.getOrderById = async (req, res) => {
     try {
-        const order = await Order.findByPk(req.params.id);
+        const order = await Order.findByPk(req.params.id, {
+            include: {
+                model: Product,
+                as: 'product'
+            }
+        });
+       
         if (!order) {
             return res.status(404).json({
                 status: 'error',
