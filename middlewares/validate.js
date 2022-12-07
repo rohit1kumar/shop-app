@@ -1,5 +1,6 @@
-const { body, validationResult } = require('express-validator');
+const { body, param, query, validationResult } = require('express-validator');
 
+// VALIDATING REGISTER REQUEST BODY
 const registerValidation = () => {
     return [
         body('name')
@@ -26,6 +27,7 @@ const registerValidation = () => {
             .trim(),
     ];
 };
+// VALIDATING LOGIN REQUEST BODY
 const loginValidation = () => {
     return [
         body('email')
@@ -46,6 +48,7 @@ const loginValidation = () => {
             .trim(),
     ];
 };
+// VALIDATING ORDER REQUEST BODY
 const orderValidation = () => {
     return [
         body('productId')
@@ -66,6 +69,65 @@ const orderValidation = () => {
             .trim(),
     ];
 };
+// VALIDATING PARAMS ID
+const paramsValidation = () => {
+    return [
+        param('id')
+            .not()
+            .isEmpty()
+            .isLength({ min: 1 })
+            .withMessage('params id cannot be empty or null')
+            .isInt()
+            .withMessage('params id must be an integer')
+            .trim(),
+    ];
+};
+// VALIDATING QUERY
+const queryValidation = () => {
+    return [
+        query('pageNumber')
+            .optional()
+            .isInt()
+            .withMessage('pageNumber must be an integer')
+            .trim(),
+        query('pageSize')
+            .optional()
+            .isInt()
+            .withMessage('pageSize must be an integer')
+            .trim(),
+        query('sortField')
+            .optional()
+            .isString()
+            .withMessage('sortField must be a string')
+            .isIn(['id', 'title', 'price', 'quantity', 'createdAt'])
+            .withMessage('sortField must be either id, title, price, quantity or createdAt')
+            .trim(),
+        query('sortOrder')
+            .optional()
+            .isString()
+            .withMessage('sortOrder must be a string')
+            .isIn(['asc', 'desc'])
+            .withMessage('sortOrder must be either asc or desc')
+            .trim(),
+        query('inStockAvailable')
+            .optional()
+            .isBoolean()
+            .withMessage('inStockAvailable must be a boolean')
+            .isIn(['true', 'false'])
+            .withMessage('inStockAvailable must be either true or false')
+            .trim(),
+        query('toDate')
+            .optional()
+            .isDate() // yyyy-mm-dd
+            .withMessage('toDate must be a date')
+            .trim(),
+        query('fromDate')
+            .optional()
+            .isDate() // yyyy-mm-dd
+            .withMessage('fromDate must be a date')
+            .trim()
+    ];
+};
 
 const validate = (req, res, next) => {
     const errors = validationResult(req);
@@ -83,4 +145,7 @@ const validate = (req, res, next) => {
     });
 };
 
-module.exports = { registerValidation, loginValidation, orderValidation, validate };
+module.exports = {
+    registerValidation, loginValidation, orderValidation,
+    paramsValidation, queryValidation, validate
+};

@@ -10,7 +10,7 @@ const DEFAULT_TO_DATE = new Date(); // today
 const DEFAULT_FROM_DATE = new Date(DEFAULT_TO_DATE.getFullYear(), DEFAULT_TO_DATE.getMonth(), DEFAULT_TO_DATE.getDate() - 7);
 
 // ADD TO ORDER (CREATE ORDER)
-exports.addToOrder = async (req, res) => {
+exports.createOrder = async (req, res) => {
     try {
         /*
         1 Check the quantity of the product in the database if its greater than
@@ -73,7 +73,7 @@ GET ALL ORDERS OF LOGGED IN USER (CUSTOMER) WITH PAGINATION,
 SORTING, FILTERING AND SEARCHING PREVIOUS ORDERS BY DATE,
 BY DEFAULT ONLY LAST 7 DAYS ORDERS ARE SHOWN
 */
-exports.getAllOrder = async (req, res) => {
+exports.getAllOrders = async (req, res) => {
     try {
         let {
             pageNumber = DEFAULT_PAGE_NUMBER,
