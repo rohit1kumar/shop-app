@@ -29,14 +29,7 @@ exports.createOrder = async (req, res) => {
             });
         }
         if (product.quantity < quantity) {
-            if (product.quantity === 0) {
-                return res.status(400).json({
-                    status: 'error',
-                    message: 'Product is out of stock'
-                });
-            }
-
-            return res.status(400).json({
+            return res.status(200).json({
                 status: 'error',
                 message: 'Available quantity is less than the requested quantity',
                 data: {
@@ -57,7 +50,8 @@ exports.createOrder = async (req, res) => {
 
         res.status(201).json({
             status: 'success',
-            message: `Order created with id ${order.id}`
+            message: `Order created with id ${order.id}`,
+            data: order
         });
     } catch (error) {
         console.log(error);
@@ -97,7 +91,7 @@ exports.getAllOrders = async (req, res) => {
         if (!['id', 'createdAt', 'totalAmount'].includes(sortField)) {
             sortField = DEFAULT_SORT_FIELD;
         }
-        if (!['ASC', 'DESC'].includes(sortOrder)) {
+        if (!['asc', 'desc'].includes(sortOrder)) {
             sortOrder = DEFAULT_SORT_ORDER;
         }
 
@@ -147,7 +141,7 @@ exports.getOrderById = async (req, res) => {
                 as: 'product'
             }
         });
-       
+
         if (!order) {
             return res.status(404).json({
                 status: 'error',
