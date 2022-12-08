@@ -8,7 +8,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-// const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load('./swagger.yaml');
 
 const { sequelize } = require('./db');
 const { notFound, error } = require('./middlewares/error');
@@ -33,7 +33,7 @@ app.use(cookieParser());
 app.get('/', (req, res) => {
     res.send('<p>Welcome To ShoppingApp API<br>Visit <a href="/docs">/docs</a> For The API Documentation</p>');
 });
-// app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/', customerRouter);
 app.use('/api/v1/', productRouter);
 app.use('/api/v1/', orderRouter);

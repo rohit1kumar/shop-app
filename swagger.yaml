@@ -1,0 +1,835 @@
+openapi: 3.0.0
+info:
+  title: Shop API
+  description: API for a Shoping App
+  contact: {}
+  version: '1.0'
+
+servers:
+- url: https://shop-tu9t.onrender.com/api/v1
+  description: Production server
+
+- url: http://localhost:3000/api/v1
+  description: Local server
+
+paths:
+  /login:
+    post:
+      tags:
+      - Customer
+      summary: Login Customer
+      description: Login to the app to get a token to access other endpoints
+      operationId: Login # unique operation id for this endpoint (used for code generation)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john@doe.com
+                password:
+                  type: string
+                  example: test123
+        required: true
+      responses:
+        '200':
+          description: Login Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Customer logged with id 1
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjcwNDI0NjY2LCJleHAiOjE2NzEyODg2NjZ9.nn8712ZvI_0ru8-itnpG-QIcE-ckulNJa6V7xXP19m8
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Invalid credentials
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: unauthorized
+
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Customer not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /register:
+    post:
+      tags:
+      - Customer
+      summary: Register Customer
+      description: Register to the app to get a token to access other endpoints
+      operationId: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  example: John@doe.com
+                password:
+                  type: string
+                  example: test123
+        required: true
+      responses:
+        '201':
+          description: Created Successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Customer registered with id 1
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjcwNDI0NjY2LCJleHAiOjE2NzEyODg2NjZ9.nn8712ZvI_0ru8-itnpG-QIcE-ckulNJa6V7xXP19m8
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Customer already exists
+
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /logout:
+    get:
+      tags:
+      - Customer
+      summary: Logout Customer
+      description: Logout from the app
+      operationId: Logout
+      responses:
+        '200':
+          description: Logout Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Customer logged out successfully
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /products:
+    get:
+      tags:
+      - Product
+      summary: Get All Products
+      description: Get all products in the shop with pagination, sorting and filtering options
+      operationId: GetProducts
+      parameters:
+      - name: pageSize
+        in: query
+        description: Number of products per page
+        required: false
+        schema:
+          type: integer
+      - name: pageNumber
+        in: query
+        description: Page number to get products from
+        required: false
+        schema:
+          type: integer
+      - name: sortField
+        in: query
+        description: Field to sort products by (id, name, price, quantity,createdAt)
+        required: false
+        schema:
+          type: string
+      - name: sortOrder
+        in: query
+        description: Sort order (asc, desc)
+        required: false
+        schema:
+          type: string
+      - name: isStockAvailable
+        in: query
+        description: Filter products by stock availability (true, false)
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: Smartphone
+                            price:
+                              type: number
+                              example: 10000
+                            quantity:
+                              type: integer
+                              example: 10
+                            description:
+                              type: string
+                              example: A smartphone is a mobile phone with an advanced mobile operating system.
+                            createdAt:
+                              type: string
+                              example: 2021-08-01T00:00:00.000Z
+                            updatedAt:
+                              type: string
+                              example: 2021-08-01T00:00:00.000Z
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Validation Failed
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        pageSize:
+                          type: string
+                          example: pageSize must be an integer
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /products/{id}:
+    get:
+      tags:
+      - Product
+      summary: Get Product by ID
+      description: Get a product by its ID
+      operationId: GetProductById
+      parameters:
+      - name: id
+        in: path
+        description: ID of product to get
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: Smartphone
+                      price:
+                        type: number
+                        example: 10000
+                      quantity:
+                        type: integer
+                        example: 10
+                      description:
+                        type: string
+                        example: A smartphone is a mobile phone with an advanced mobile operating system.
+                      createdAt:
+                        type: string
+                        example: 2021-08-01T00:00:00.000Z
+                      updatedAt:
+                        type: string
+                        example: 2021-08-01T00:00:00.000Z
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Product not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Validation Failed
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: params id must be an integer
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /order:
+    post:
+      tags:
+      - Order
+      summary: Create Order
+      description: Create an order for the logged in customer with the given products and quantities
+      operationId: CreateOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: string
+                  example: 1
+                quantity:
+                  type: string
+                  example: 1
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Available quantity is less than the requested quantity
+                  data:
+                    type: object
+                    properties:
+                      availableQuantity:
+                        type: integer
+                        example: 10
+                      requestedQuantity:
+                        type: integer
+                        example: 11
+        '201':
+          description: Order Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Order created with id 1
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      customerId:
+                        type: integer
+                        example: 1
+                      productId:
+                        type: integer
+                        example: 1
+                      quantity:
+                        type: integer
+                        example: 1
+                      totalAmount:
+                        type: integer
+                        example: 10000
+                      createdAt:
+                        type: string
+                        example: 2021-08-01T00:00:00.000Z
+                      updatedAt:
+                        type: string
+                        example: 2021-08-01T00:00:00.000Z
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Product not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Validation Failed
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productsId:
+                          type: string
+                          example: productsId must be an integer
+                        quantity:
+                          type: string
+                          example: quantity must be an integer
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /orders:
+    get:
+      tags:
+      - Order
+      summary: Get Orders
+      description: Get all orders for the logged in customer
+      operationId: GetOrders
+      parameters:
+      - name: pageNumber
+        in: query
+        description: Page number
+        example: 1
+        required: false
+        schema:
+          type: integer
+      - name: pageSize
+        in: query
+        description: Page size
+        example: 10
+        required: false
+        schema:
+          type: integer
+      - name: sortField
+        in: query
+        description: Sort field (id, createdAt, updatedAt, totalAmount, quantity)
+        example: id
+        required: false
+        schema:
+          type: string
+      - name: sortOrder
+        in: query
+        description: Sort order (asc, desc)
+        example: asc
+        required: false
+        schema:
+          type: string
+      - name: fromDate
+        in: query
+        description: From date (YYYY-MM-DD)
+        example: 2021-08-01
+        required: false
+        schema:
+          type: string
+      - name: toDate
+        in: query
+        description: To date (YYYY-MM-DD)
+        example: 2021-08-01
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            customerId:
+                              type: integer
+                              example: 1
+                            productId:
+                              type: integer
+                              example: 1
+                            quantity:
+                              type: integer
+                              example: 1
+                            totalAmount:
+                              type: integer
+                              example: 10000
+                            createdAt:
+                              type: string
+                              example: 2021-08-01T00:00:00.000Z
+                            updatedAt:
+                              type: string
+                              example: 2021-08-01T00:00:00.000Z
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Unauthorized
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 422
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Validation Failed
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        pageNumber:
+                          type: string
+                          example: pageNumber must be an integer
+                        pageSize:
+                          type: string
+                          example: pageSize must be an integer
+                        sortField:
+                          type: string
+                          example: sortField must be one of the following values: id, createdAt, updatedAt, totalAmount, quantity
+                        sortOrder:
+                          type: string
+                          example: sortOrder must be one of the following values: asc, desc
+                        fromDate:
+                          type: string
+                          example: fromDate must be a valid date
+                        toDate:
+                          type: string
+                          example: toDate must be a valid date
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /order/{id}:
+    get:
+      tags:
+      - Order
+      summary: Get Order
+      description: Get order by id
+      operationId: GetOrder
+      parameters:
+      - name: id
+        in: path
+        description: Order id
+        example: 1
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      customerId:
+                        type: integer
+                        example: 1
+                      productId:
+                        type: integer
+                        example: 1
+                      quantity:
+                        type: integer
+                        example: 1
+                      totalAmount:
+                        type: integer
+                        example: 10000
+                      createdAt:
+                        type: string
+                        example: 2021-08-01T00:00:00.000Z
+                      updatedAt:
+                        type: string
+                        example: 2021-08-01T00:00:00.000Z
+                      product:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          title:
+                            type: string
+                            example: Shoes
+                          price:
+                            type: integer
+                            example: 10000
+                          quantity:
+                            type: integer
+                            example: 10
+                          description:
+                            type: string
+                            example: This is a shoes
+                          createdAt:
+                            type: string
+                            example: 2021-08-01T00:00:00.000Z
+                          updatedAt:
+                            type: string
+                            example: 2021-08-01T00:00:00.000Z
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Order not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal Server Error
