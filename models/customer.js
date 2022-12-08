@@ -1,4 +1,4 @@
-const { DataTypes, sequelize } = require('../db');
+const { DataTypes, sequelize } = require('../config/db')
 
 const Customer = sequelize.define('customer', {
     id: {
@@ -24,7 +24,5 @@ const Customer = sequelize.define('customer', {
         defaultValue: DataTypes.NOW
     }
 });
-
-
 
 module.exports = Customer;

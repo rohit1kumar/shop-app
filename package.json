@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node -L server.js"
+    "start": "node -L server.js",
+    "migrate": "node config/migrate.js"
   },
   "author": "Rohit Kumar",
   "license": "ISC",

@@ -10,7 +10,7 @@ const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = YAML.load('./swagger.yaml');
 
-const { sequelize } = require('./db');
+const { sequelize } = require('./config/db');
 const { notFound, error } = require('./middlewares/error');
 
 // router
@@ -43,17 +43,11 @@ app.use(error); // 500
 app.use(notFound); // 404
 
 const port = process.env.PORT || 3000;
-// const data = require('./product.json');
-// const Product = require('./models/product');
 
 const startServer = async () => {
     try {
-        // await sequelize.sync({ force: true }); // force: true will drop the table if it already exists
-
         await sequelize.sync();
         await sequelize.authenticate();
-
-        // await Product.bulkCreate(data);
         console.log('Database connected successfully');
         app.listen(port, () => console.log(`Server is running on port ${port}`));
     } catch (err) {
